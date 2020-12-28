@@ -12,3 +12,5 @@
 - Insertarlo en una base de datos que tenga el nombre "**wbpg**"
 - Abrir un servidor de Apache}
 - Poner los archivos en el /htdocs o /WWW
+
+![](https://i.ibb.co/QrrYTNh/descargar.png)
