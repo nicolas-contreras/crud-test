@@ -1,7 +1,7 @@
 <?php
 require_once 'database.php';
 require_once 'worker.php';
-require_once 'upload.php';
+include 'upload.php';
 
 $item = new data_management();
 $model = new handle_info();
@@ -17,8 +17,9 @@ if(isset($_REQUEST['action']))
 			$item->__SET('cost_price', $_REQUEST['cost_price']);
 			$item->__SET('unit_price', $_REQUEST['unit_price']);
 			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
+			
 			$model->update_data($item);
-			$upload->upload_handler();
+			$upload->upload_handler($_REQUEST['pic_filename']);			 
 			header('Location: index.php');
 			break;
 
@@ -28,8 +29,9 @@ if(isset($_REQUEST['action']))
 			$item->__SET('unit_price',$_REQUEST['unit_price']);
 			$item->__SET('cost_price',$_REQUEST['cost_price']);
 			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
+			
 			$model->add_data($item);
-			$upload->upload_handler();
+			$upload->upload_handler($_REQUEST['pic_filename']);		 
 			header('Location: index.php');
 			break;
 
@@ -42,9 +44,7 @@ if(isset($_REQUEST['action']))
 			$item = $model->get_data($_REQUEST['id']);
 			break;
 	}
-}
-
-		
+}		
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -55,9 +55,9 @@ if(isset($_REQUEST['action']))
 	</head>
     <body style="padding:15px;">
 
-        <div class="ml-center" style="3px 3px 3px 3px; max-width:650px; background-color:#d1cfcb;">
+        <div class="ml-center" style="3px 3px 3px 3px; max-width:800px; background-color:#d1cfcb;">
             <div class="ml-center " style="">
-                <form action="?action=<?php echo $item->id > 0 ? 'update' : 'add'; ?>" method="post" class="pure-form pure-form-stacked" style="margin-bottom:30px; width:100%;">
+                <form action="?action=<?php echo $item->id > 0 ? 'update' : 'add'; ?>" method="post" enctype="multipart/form-data" class="pure-form pure-form-stacked" style="margin-bottom:30px; width:100%;">
                     <input type="hidden" name="id" value="<?php echo $item->__GET('id'); ?>" />
                     
                     <table style="width:100%;">
@@ -114,11 +114,11 @@ if(isset($_REQUEST['action']))
                         <tr>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('id'); ?></td>
 							<td style="background-color:#d1cfcb">
-								<img src="<?php echo ($r->__GET('pic_filename')); ?>" />
+								<img class="ml-img ml-img-center" src="img/products/<?php echo ($r->__GET('pic_filename')); ?>" />
 							</td>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('name'); ?></td>
-							<td style="background-color:#d1cfcb"><?php $cat = $r->__GET('category'); switch ($cat){ case "1": echo "Gorros"; break; case "2": echo "Camisas"; break; case "3": echo "Camisetas"; break; case "4": echo "Jeans"; break; case "5": echo "Zapatos"; break;}
-?></td>
+							<td style="background-color:#d1cfcb"><?php $cat = $r->__GET('category'); switch ($cat){ case "1": echo "Gorros"; break; case "2": echo "Camisas"; break; case "3": echo "Camisetas"; break; case "4": echo "Jeans"; break; case "5": echo "Zapatos"; break;}?>
+							</td>
                             <td style="background-color:#d1cfcb"><?php echo $r->__GET('cost_price'); ?></td>
                             <td style="background-color:#d1cfcb"><?php echo $r->__GET('unit_price'); ?></td>
                             <td style="background-color:#d1cfcb">

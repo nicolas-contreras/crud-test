@@ -27,7 +27,7 @@ class handle_info{
 				$item->__set('category', $r->category);
 				$item->__set('cost_price', $r->cost_price);
 				$item->__set('unit_price', $r->unit_price);
-				$item->__set('pic_filename', "img/products/" . $r->pic_filename);
+				$item->__set('pic_filename',$r->pic_filename);
 				
 				$result[]=$item;
 			}

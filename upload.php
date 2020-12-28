@@ -1,10 +1,10 @@
 <?php
 class upload_manager
 {
-	
 	public function upload_handler()
 	{
 		require_once 'database.php';
+		require_once 'worker.php';
 		$target_dir = "img/products/";
 		$target_file = $target_dir . basename($_FILES['pic_filename']['name']);
 		$uploadOk = 1;
@@ -25,6 +25,10 @@ class upload_manager
 		//check format
 		if ($imageFileType != "jpg" && $imageFileType != "jpeg") {
 			echo "Sólo puedes subir JPG y JPEG";
+			$uploadOk = 0;
+		}
+		if (file_exists($target_file)) {
+			echo "Sorry, file already exists.";
 			$uploadOk = 0;
 		}
 
