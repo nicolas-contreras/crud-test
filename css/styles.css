@@ -1,0 +1,23 @@
+body{
+	background-color:#f2f2f2;
+}
+th *{
+	background-color:#d1cfcb;
+}
+
+
+.ml-center {
+	margin: auto;
+	width:95%;
+	padding: 5px;
+}
+.ml-table-fit{
+	table-layout:fixed;
+	width:100%;
+	
+}
+
+.ml-table-body-background{
+	background-color:light-gray;
+	
+}
