@@ -1,38 +1,43 @@
-<?php  
-class upload_handler{
-
-public function upload(){
+<?php
+class upload_manager
+{
 	
- 
-$status = $statusMsg = ''; 
-if(isset($_POST["submit"])){ 
-    $status = 'error'; 
-    if(!empty($_FILES["image"]["name"])) { 
-        $fileName = basename($_FILES["image"]["name"]); 
-        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);  
-        $allowTypes = array('jpg','png','jpeg','gif'); 
-        if(in_array($fileType, $allowTypes)){ 
-            $image = $_FILES['image']['tmp_name']; 
-            $imgContent = addslashes(file_get_contents($image)); 
-            $insert = $db->query("INSERT into epico_items (pic_filename) VALUES ('$imgContent'"); 
-             
-            if($insert){ 
-                $status = 'success'; 
-                $statusMsg = "File uploaded successfully."; 
-            }else{ 
-                $statusMsg = "File upload failed, please try again."; 
-            }  
-        }else{ 
-            $statusMsg = 'Sorry, only JPG, JPEG, PNG, & GIF files are allowed to upload.'; 
-        } 
-    }else{ 
-        $statusMsg = 'Please select an image file to upload.'; 
-    } 
-} 
+	public function upload_handler()
+	{
+		require_once 'database.php';
+		$target_dir = "img/products/";
+		$target_file = $target_dir . basename($_FILES['pic_filename']['name']);
+		$uploadOk = 1;
+		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+		
 
-echo $statusMsg; 
+		//check if is an image
+		if (isset($_POST["submit"])) {
+			$check = getimagesize($_FILES['pic_filename']['tmp_name']);
+			if ($check !== false) {
+				echo "El archivo es una imagen - " . $check['mime'] . ".";
+				$uploadOk = 1;
+			} else {
+				echo "El archivo no es una imagen";
+				$uploadOk = 0;
+			}
+		}
+		//check format
+		if ($imageFileType != "jpg" && $imageFileType != "jpeg") {
+			echo "Sólo puedes subir JPG y JPEG";
+			$uploadOk = 0;
+		}
+
+		//check if $uploadOk is set to 0 by an error
+		if ($uploadOk == 0) {
+			echo "No ha sido posible subir tu archivo.";
+		//check if its possible to upload file
+		} else {
+			if (move_uploaded_file($_FILES['pic_filename']['tmp_name'], $target_file)) {
+				echo "El archivo " . htmlspecialchars(basename($_FILES['pic_filename']['name'])) . " ha sido subido.";
+			} else {
+				echo "Ha ocurrido un error subiendo la imagen";
+			}
+		}
+	}
 }
-
-}
-
-?>

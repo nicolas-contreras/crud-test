@@ -5,7 +5,7 @@ require_once 'upload.php';
 
 $item = new data_management();
 $model = new handle_info();
-$upload = new upload_handler();
+$upload = new upload_manager();
 if(isset($_REQUEST['action']))
 {
     switch($_REQUEST['action'])
@@ -16,9 +16,9 @@ if(isset($_REQUEST['action']))
 			$item->__SET('category', $_REQUEST['category']);
 			$item->__SET('cost_price', $_REQUEST['cost_price']);
 			$item->__SET('unit_price', $_REQUEST['unit_price']);
-			$item->__SET('pic_filename',$_REQUEST[$file]);
-			$result = $db->query("SELECT image FROM epico_items ORDER BY id DESC"); 
+			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
 			$model->update_data($item);
+			$upload->upload_handler();
 			header('Location: index.php');
 			break;
 
@@ -28,8 +28,8 @@ if(isset($_REQUEST['action']))
 			$item->__SET('unit_price',$_REQUEST['unit_price']);
 			$item->__SET('cost_price',$_REQUEST['cost_price']);
 			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
-
 			$model->add_data($item);
+			$upload->upload_handler();
 			header('Location: index.php');
 			break;
 
@@ -44,6 +44,7 @@ if(isset($_REQUEST['action']))
 	}
 }
 
+		
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -86,7 +87,7 @@ if(isset($_REQUEST['action']))
                         </tr>
 						<tr>
 						<th style="text-align:left;">Imagen</th>
-							<td><input type="file" name="file" /></td>
+							<td><input type="file" name="pic_filename" value="<?php echo $item->__GET('pic_filename'); ?>" required/></td>
 						</tr>
                         <tr>
                             <td colspan="2">
@@ -96,7 +97,7 @@ if(isset($_REQUEST['action']))
                     </table>
                 </form>
 
-                <table class="pure-table pure-table-horizontal ml-table-fit" style="width:100%; ">
+                <table class="pure-table pure-table-horizontal ml-table-fit" style="width:100%;">
                     <thead>
                         <tr>
                             <th style="text-align:left;">ID</th>
@@ -112,7 +113,9 @@ if(isset($_REQUEST['action']))
                     <?php foreach($model->list_data() as $r): ?>
                         <tr>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('id'); ?></td>
-							<td style="background-color:#d1cfcb"><img src=""<?php echo $r->__GET('pic_filename'); ?>""</td>
+							<td style="background-color:#d1cfcb">
+								<img src="<?php echo ($r->__GET('pic_filename')); ?>" />
+							</td>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('name'); ?></td>
 							<td style="background-color:#d1cfcb"><?php $cat = $r->__GET('category'); switch ($cat){ case "1": echo "Gorros"; break; case "2": echo "Camisas"; break; case "3": echo "Camisetas"; break; case "4": echo "Jeans"; break; case "5": echo "Zapatos"; break;}
 ?></td>
