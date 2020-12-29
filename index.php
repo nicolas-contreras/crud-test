@@ -1,7 +1,7 @@
 <?php
 require_once 'database.php';
 require_once 'worker.php';
-include 'upload.php';
+require_once 'upload.php';
 
 $item = new data_management();
 $model = new handle_info();
@@ -16,22 +16,22 @@ if(isset($_REQUEST['action']))
 			$item->__SET('category', $_REQUEST['category']);
 			$item->__SET('cost_price', $_REQUEST['cost_price']);
 			$item->__SET('unit_price', $_REQUEST['unit_price']);
-			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
+			$item->__SET('pic_filename',$file_name);
 			
 			$model->update_data($item);
-			$upload->upload_handler($_REQUEST['pic_filename']);			 
+			$upload->upload_handler(); 
 			header('Location: index.php');
 			break;
 
 		case 'add':
-			$item->__SET('name',$_REQUEST['name']);
-			$item->__SET('category',$_REQUEST['category']);
-			$item->__SET('unit_price',$_REQUEST['unit_price']);
-			$item->__SET('cost_price',$_REQUEST['cost_price']);
-			$item->__SET('pic_filename',$_REQUEST['pic_filename']);
-			
+			$item->__SET('name', $_REQUEST['name']);
+			$item->__SET('category', $_REQUEST['category']);
+			$item->__SET('cost_price', $_REQUEST['cost_price']);
+			$item->__SET('unit_price', $_REQUEST['unit_price']);
+			$item->__SET('pic_filename',$file_name);
+				
 			$model->add_data($item);
-			$upload->upload_handler($_REQUEST['pic_filename']);		 
+			$upload->upload_handler();		 
 			header('Location: index.php');
 			break;
 
@@ -56,8 +56,8 @@ if(isset($_REQUEST['action']))
     <body style="padding:15px;">
 
         <div class="ml-center" style="3px 3px 3px 3px; max-width:800px; background-color:#d1cfcb;">
-            <div class="ml-center " style="">
-                <form action="?action=<?php echo $item->id > 0 ? 'update' : 'add'; ?>" method="post" enctype="multipart/form-data" class="pure-form pure-form-stacked" style="margin-bottom:30px; width:100%;">
+            <div class="ml-center">
+                <form role="form" action="?action=<?php echo $item->id > 0 ? 'update' : 'add'; ?>" method="post" class="pure-form pure-form-stacked" style="margin-bottom:30px; width:100%;" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="<?php echo $item->__GET('id'); ?>" />
                     
                     <table style="width:100%;">
@@ -87,7 +87,7 @@ if(isset($_REQUEST['action']))
                         </tr>
 						<tr>
 						<th style="text-align:left;">Imagen</th>
-							<td><input type="file" name="pic_filename" value="<?php echo $item->__GET('pic_filename'); ?>" required/></td>
+							<td><input type="file" name="pic_filename_ipt" required/></td>
 						</tr>
                         <tr>
                             <td colspan="2">
@@ -114,7 +114,7 @@ if(isset($_REQUEST['action']))
                         <tr>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('id'); ?></td>
 							<td style="background-color:#d1cfcb">
-								<img class="ml-img ml-img-center" src="img/products/<?php echo ($r->__GET('pic_filename')); ?>" />
+								<img class="ml-img ml-img-center" src="<?php echo ("/img/products/" . $r->__GET('pic_filename')); ?>" title="<?php echo $r->__GET('name'); ?>"/>
 							</td>
 							<td style="background-color:#d1cfcb"><?php echo $r->__GET('name'); ?></td>
 							<td style="background-color:#d1cfcb"><?php $cat = $r->__GET('category'); switch ($cat){ case "1": echo "Gorros"; break; case "2": echo "Camisas"; break; case "3": echo "Camisetas"; break; case "4": echo "Jeans"; break; case "5": echo "Zapatos"; break;}?>
@@ -128,6 +128,7 @@ if(isset($_REQUEST['action']))
                                 <a href="?action=delete&id=<?php echo $r->id; ?>">Eliminar</a>
                             </td>
                         </tr>
+						<?php echo $_REQUEST['pic_filename']; ?>
                     <?php endforeach; ?>
                 </table>     
               

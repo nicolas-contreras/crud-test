@@ -7,9 +7,8 @@ class handle_info{
 			$this->pdo = new PDO('mysql:host=localhost;dbname=wbpg','root','');
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
-		catch(PDOException $e){
-			echo ("No ha sido posible conectarse a la base de datos: $e");
-			exit;
+		catch(Exception $e){
+			die($e->getMessage());
 		}
 	}
 	
@@ -27,7 +26,7 @@ class handle_info{
 				$item->__set('category', $r->category);
 				$item->__set('cost_price', $r->cost_price);
 				$item->__set('unit_price', $r->unit_price);
-				$item->__set('pic_filename',$r->pic_filename);
+				$item->__set('pic_filename', $r->pic_filename);
 				
 				$result[]=$item;
 			}
@@ -50,7 +49,7 @@ class handle_info{
 			$item->__set('category', $r->category);
 			$item->__set('cost_price', $r->cost_price);
 			$item->__set('unit_price', $r->unit_price);
-			$item->__set('pic_filename', "img/products/" . $r->pic_filename);
+			$item->__set('pic_filename', $r->pic_filename);
 			
 			return $item;
 		}
@@ -72,11 +71,7 @@ class handle_info{
 	public function update_data(data_management $data){
 		try{
 			$sql = "UPDATE epico_items SET 
-					name          = ?, 
-					category        = ?,
-					cost_price           = ?,
-					unit_price = ?,
-					pic_filename = ?
+					name = ?, category = ?, cost_price = ?, unit_price = ?, pic_filename = ?
 				    WHERE id = ?";
 
 			$this->pdo->prepare($sql)
@@ -95,7 +90,30 @@ class handle_info{
 			die($e->getMessage());
 		}
 	}
-		
+	
+/*	public function update_data(data_management $data){
+		try{
+			$sql = "UPDATE epico_items 
+					SET	name=?, category=?, cost_price= ?, unit_price=?
+					WHERE id = ?";
+					
+			$this->pdo->prepare($sql)
+			->execute(
+			array(
+				$data->__GET('name'),
+				$data->__GET('category'),
+				$data->__GET('cost_price'),
+				$data->__GET('unit_price'),
+				$data->__GET('id')
+				)
+			);
+		}
+		catch(Exception $e){
+			die($e->getMessage());
+		}
+	}
+	*/
+	
 	public function add_data(data_management $data){
 		try{
 			$sql ="INSERT INTO epico_items 
@@ -120,5 +138,17 @@ class handle_info{
 			die($e->getMessage());
 		} 
 	}
+	public function check_category(){
+		try{
+			
+			
+		}
+		catch(Exception $e){
+			die($e->getMessage());
+		} 
+	}
+
 }
+
+
 ?>
